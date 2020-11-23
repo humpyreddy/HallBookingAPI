@@ -31,7 +31,6 @@ let list = ()=>{
     return roomsList;
 }
 
-// console.log(list())
 
 app
     .use(bodyParser.json())
@@ -52,9 +51,22 @@ app
    
     .post('/bookRoom',(req,res)=>{
         req.body.data.forEach(item=>{
-            booking.push(item)
+         let bookedStatus = false;
+           booking.forEach(ele=>{
+               if(ele.date == item.date){
+                   bookedStatus = true;
+               }
+           })
+           if(!bookedStatus){
+               booking.push(item)
+               res.status(200).json({status:"Room Booked"});
+           }
+           else{
+            res.status(200).json({status:"Room not available for this date"});
+
+           }
         })
-        res.status(200).json({status:"Room Booked"});
+        
 
     })
     //List of all rooms
